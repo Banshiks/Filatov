@@ -100,7 +100,7 @@ exit 0
 
 
 ```
-![стат3]!(https://github.com/user-attachments/assets/dd495b3a-cd94-4325-b1ba-61a828d8a01a)
+![стат3](https://github.com/user-attachments/assets/dd495b3a-cd94-4325-b1ba-61a828d8a01a)
 
 ![серв2](https://github.com/user-attachments/assets/7c0d4076-4702-4d74-b9fa-7d3110a15f79)
 
