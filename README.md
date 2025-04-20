@@ -1,4 +1,35 @@
-# Домашнее задание к занятию 1 «Disaster recovery и Keepalived» - Филатов Олег
+# Домашнее задание к занятию 1 «Disaster recovery и Keepalived» -Филатов Олег Николаевич
+
+### Цель задания
+В результате выполнения этого задания вы научитесь:
+1. Настраивать отслеживание интерфейса для протокола HSRP;
+2. Настраивать сервис Keepalived для использования плавающего IP
+
+------
+
+### Чеклист готовности к домашнему заданию
+
+1. Установлена программа Cisco Packet Tracer
+2. Установлена операционная система Ubuntu на виртуальную машину и имеется доступ к терминалу
+3. Сделан клон этой виртуальной машины, они находятся в одной подсети и имеют разные IP адреса
+4. Просмотрены конфигурационные файлы, рассматриваемые на лекции, которые находятся по [ссылке](1/)
+
+
+------
+
+### Инструкция по выполнению домашнего задания
+
+1. Сделайте fork [репозитория c шаблоном решения](https://github.com/netology-code/sys-pattern-homework) к себе в Github и переименуйте его по названию или номеру занятия, например, https://github.com/имя-вашего-репозитория/gitlab-hw или https://github.com/имя-вашего-репозитория/8-03-hw).
+2. Выполните клонирование этого репозитория к себе на ПК с помощью команды git clone.
+3. Выполните домашнее задание и заполните у себя локально этот файл README.md:
+   - впишите вверху название занятия и ваши фамилию и имя;
+   - в каждом задании добавьте решение в требуемом виде: текст/код/скриншоты/ссылка;
+   - для корректного добавления скриншотов воспользуйтесь инструкцией [«Как вставить скриншот в шаблон с решением»](https://github.com/netology-code/sys-pattern-homework/blob/main/screen-instruction.md);
+   - при оформлении используйте возможности языка разметки md. Коротко об этом можно посмотреть в [инструкции по MarkDown](https://github.com/netology-code/sys-pattern-homework/blob/main/md-instruction.md).
+4. После завершения работы над домашним заданием сделайте коммит (git commit -m "comment") и отправьте его на Github (git push origin).
+5. Для проверки домашнего задания преподавателем в личном кабинете прикрепите и отправьте ссылку на решение в виде md-файла в вашем Github.
+6. Любые вопросы задавайте в чате учебной группы и/или в разделе «Вопросы по заданию» в личном кабинете.
+
 
 ------
 
@@ -9,12 +40,15 @@
 - Необходимо аналогично настроить отслеживание состояния интерфейсов Gi0/0 (для первой группы).
 - Для проверки корректности настройки, разорвите один из кабелей между одним из маршрутизаторов и Switch0 и запустите ping между PC0 и Server0.
 - На проверку отправьте получившуюся схему в формате pkt и скриншот, где виден процесс настройки маршрутизатора.
-  https://github.com/SergeySS72/hometasks/blob/main/hsrp_advanced%2BSizrantsevSS.pkt
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/d0cf9075-ff93-4d28-ba71-6dc1f0a37f98)
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/5e85a1fa-d89b-4d8a-b5f4-def7cc6b4821)
+
+### *Ответ*
+
+![роут1](https://github.com/user-attachments/assets/99b4d4be-9a8d-4cca-91f9-0b6df9df46d1)
+![роут2](https://github.com/user-attachments/assets/c09ff560-268e-4aa2-8f40-681f09649813)
+![Безымянный](https://github.com/user-attachments/assets/8d1e832f-81b5-42e8-b143-9f6815cd81ed)
+
 
 ------
-
 
 ### Задание 2
 - Запустите две виртуальные машины Linux, установите и настройте сервис Keepalived как в лекции, используя пример конфигурационного [файла](1/keepalived-simple.conf).
@@ -23,23 +57,55 @@
 - Настройте Keepalived так, чтобы он запускал данный скрипт каждые 3 секунды и переносил виртуальный IP на другой сервер, если bash-скрипт завершался с кодом, отличным от нуля (то есть порт веб-сервера был недоступен или отсутствовал index.html). Используйте для этого секцию vrrp_script
 - На проверку отправьте получившейся bash-скрипт и конфигурационный файл keepalived, а также скриншот с демонстрацией переезда плавающего ip на другой сервер в случае недоступности порта или файла index.html
 
-#### Скрипт:
-([[ -f '/var/www/html/index.nginx-debian.html' ]]) && (killall -0 nginx 2> /dev/null)
+### *Ответ*
 
-![image](https://github.com/SergeySS72/hometasks/assets/134854727/a7b76e28-f6a8-45ab-8751-bc5dce9e32bd)
 
-#### MASTER
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/6a76d8f3-547c-474d-b655-e0fcca1f935c)
+keepalived.conf:
+```
+vrrp_script check_script {
+      script  "/usr/local/bin/check.sh"
+       interval 3
+}
+vrrp_instance VI_1 {
+        state MASTER
+        interface enp0s3
+        virtual_router_id 15
+        priority 255
+        advert_int 1
+        virtual_ipaddress {
+              192.168.2.15/24
+        }
+        track_script {
+                   check_script
+        }
+}
 
-#### BACKUP
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/751ebf41-a9b5-4735-94d9-5991738586ef)
 
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/2fab02eb-7edd-4db1-922e-b6bb6258d102)
+```
 
-nginx остановлен
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/326d9081-557e-4691-93ab-2fa4de1843ad)
+check.sh:
+```
+#!/bin/bash
+nc -z localhost 80
+result=$?
+if [[ -f /var/www/html/index.nginx-debian.html ]]; then
+    file_exists=0
+else
+    file_exists=1
+fi
+if [[ $result -ne 0 || $file_exists -ne 0 ]]; then
+    exit 1
+fi
+exit 0
 
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/4ff292b2-d022-4251-8d96-f7292c129f01)
 
-Индекс файл: index.nginx-debian.html  - переименован
-  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/d968ebba-9be2-4078-8ff1-2ec5ce12659c)
+```
+![стат3](https://github.com/user-attachments/assets/cae1912e-2f22-4d34-b427-db83b3a9c90d)
+
+![серв2](https://github.com/user-attachments/assets/7c0d4076-4702-4d74-b9fa-7d3110a15f79)
+
+![серв1](https://github.com/user-attachments/assets/2e58532e-bba2-4b16-be39-8c833f5bfdf8)
+
+
+
+------
