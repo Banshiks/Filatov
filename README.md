@@ -100,9 +100,8 @@ exit 0
 
 
 ```
-![стат3](https://github.com/user-attachments/assets/cae1912e-2f22-4d34-b427-db83b3a9c90d)
-
-![серв2]
+![стат3]
+![серв2](https://github.com/user-attachments/assets/7c0d4076-4702-4d74-b9fa-7d3110a15f79)
 
 ![серв1](https://github.com/user-attachments/assets/2e58532e-bba2-4b16-be39-8c833f5bfdf8)
 
