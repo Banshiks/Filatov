@@ -1,1 +1,45 @@
-# Filatov
+# Домашнее задание к занятию 1 «Disaster recovery и Keepalived» - Филатов Олег
+
+------
+
+
+### Задание 1
+- Дана [схема](1/hsrp_advanced.pkt) для Cisco Packet Tracer, рассматриваемая в лекции.
+- На данной схеме уже настроено отслеживание интерфейсов маршрутизаторов Gi0/1 (для нулевой группы)
+- Необходимо аналогично настроить отслеживание состояния интерфейсов Gi0/0 (для первой группы).
+- Для проверки корректности настройки, разорвите один из кабелей между одним из маршрутизаторов и Switch0 и запустите ping между PC0 и Server0.
+- На проверку отправьте получившуюся схему в формате pkt и скриншот, где виден процесс настройки маршрутизатора.
+  https://github.com/SergeySS72/hometasks/blob/main/hsrp_advanced%2BSizrantsevSS.pkt
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/d0cf9075-ff93-4d28-ba71-6dc1f0a37f98)
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/5e85a1fa-d89b-4d8a-b5f4-def7cc6b4821)
+
+------
+
+
+### Задание 2
+- Запустите две виртуальные машины Linux, установите и настройте сервис Keepalived как в лекции, используя пример конфигурационного [файла](1/keepalived-simple.conf).
+- Настройте любой веб-сервер (например, nginx или simple python server) на двух виртуальных машинах
+- Напишите Bash-скрипт, который будет проверять доступность порта данного веб-сервера и существование файла index.html в root-директории данного веб-сервера.
+- Настройте Keepalived так, чтобы он запускал данный скрипт каждые 3 секунды и переносил виртуальный IP на другой сервер, если bash-скрипт завершался с кодом, отличным от нуля (то есть порт веб-сервера был недоступен или отсутствовал index.html). Используйте для этого секцию vrrp_script
+- На проверку отправьте получившейся bash-скрипт и конфигурационный файл keepalived, а также скриншот с демонстрацией переезда плавающего ip на другой сервер в случае недоступности порта или файла index.html
+
+#### Скрипт:
+([[ -f '/var/www/html/index.nginx-debian.html' ]]) && (killall -0 nginx 2> /dev/null)
+
+![image](https://github.com/SergeySS72/hometasks/assets/134854727/a7b76e28-f6a8-45ab-8751-bc5dce9e32bd)
+
+#### MASTER
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/6a76d8f3-547c-474d-b655-e0fcca1f935c)
+
+#### BACKUP
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/751ebf41-a9b5-4735-94d9-5991738586ef)
+
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/2fab02eb-7edd-4db1-922e-b6bb6258d102)
+
+nginx остановлен
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/326d9081-557e-4691-93ab-2fa4de1843ad)
+
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/4ff292b2-d022-4251-8d96-f7292c129f01)
+
+Индекс файл: index.nginx-debian.html  - переименован
+  ![image](https://github.com/SergeySS72/hometasks/assets/134854727/d968ebba-9be2-4078-8ff1-2ec5ce12659c)
